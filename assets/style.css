@@ -1,0 +1,21 @@
+/* body {
+    height: 100%;
+} */
+.gray {
+    background-color: #eee;
+}
+
+.blue {
+    margin: 10px;
+    height: 160px;
+    width: 150px;
+    background-color: blue;
+}
+
+.flex-box {
+    display: flex;
+    flex-wrap: wrap;
+}
+.flex-box-no-wrap {
+    display: flex;
+}

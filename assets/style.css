@@ -7,9 +7,8 @@
 
 .blue {
     margin: 10px;
-    height: 160px;
-    width: 150px;
-    background-color: blue;
+
+    background-color: rgb(89, 89, 255);
 }
 
 .flex-box {
@@ -18,4 +17,9 @@
 }
 .flex-box-no-wrap {
     display: flex;
+}
+
+#uv {
+    padding: 5px;
+    border-radius: 5px;
 }

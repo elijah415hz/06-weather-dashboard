@@ -28,9 +28,12 @@
       <div class="card gray">
         <div class="card-body">
           <h3 class="display-10">Search for a City:</h3>
-          <form class="flex-box-no-wrap" id="city">
-            <input class="form-control" type="text" placeholder="City" id="city-input">
-            <button class="btn btn-primary" id="cityBtn"><i class="fa fa-search"></i></button>
+          <form autocomplete="off" class="flex-box-no-wrap" id="city">
+            <div class="autocomplete" style="width:300px;">
+              <input class="form-control" type="text" placeholder="City" id="city-input">
+              <div id="autocomplete-list" class="autocomplete-items"></div>
+            </div>
+              <button class="btn btn-primary" id="cityBtn"><i class="fa fa-search"></i></button>
           </form>
           <br>
           <div class="card cities">

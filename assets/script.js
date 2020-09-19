@@ -21,26 +21,19 @@ function loadCities() {
 // Autocomplete API through GeocodeAPI
 $("#city-input").on("keydown", function (event) {
   var input = $("#city-input").val();
-  // console.log(this)
-  var x = document.getElementById("autocomplete-list");
-  // console.log(x);
-  if (x) x = x.getElementsByTagName("div");
-  // console.log(x)
+  var autoItems = $("#autocomplete-list div");
   switch (event.code) {
     case "ArrowDown":
       currentFocus++;
-      // console.log(currentFocus)
-      addActive(x);
+      addActive(autoItems);
       break;
     case "ArrowUp":
       currentFocus--;
-      addActive(x);
+      addActive(autoItems);
       break;
     case "Enter":
-      event.preventDefault();
-      // console.log(currentFocus)
       if (currentFocus != -1) {
-        $("#city-input").val(x[currentFocus].textContent);
+        $("#city-input").val(autoItems[currentFocus].textContent);
       }
       city = $("#city-input").val();
       $("#cityBtn").trigger("click")
@@ -69,20 +62,20 @@ $("#city-input").on("keydown", function (event) {
   }
 
 })
-function addActive(x) {
+function addActive(element) {
   /*a function to classify an item as "active":*/
-  if (!x) return false;
+  if (!element) return false;
   /*start by removing the "active" class on all items:*/
-  removeActive(x);
-  if (currentFocus >= x.length) currentFocus = 0;
-  if (currentFocus < 0) currentFocus = (x.length - 1);
+  removeActive(element);
+  if (currentFocus >= element.length) currentFocus = 0;
+  if (currentFocus < 0) currentFocus = (element.length - 1);
   /*add class "autocomplete-active":*/
-  x[currentFocus].classList.add("autocomplete-active");
+  element[currentFocus].classList.add("autocomplete-active");
 }
-function removeActive(x) {
+function removeActive(element) {
   /*a function to remove the "active" class from all autocomplete items:*/
-  for (var i = 0; i < x.length; i++) {
-    x[i].classList.remove("autocomplete-active");
+  for (var i = 0; i < element.length; i++) {
+    element[i].classList.remove("autocomplete-active");
   }
 }
 
@@ -94,8 +87,9 @@ $("#cityBtn").on("click", function (event) {
   cityArr.unshift(city);
   // converting to Set to remove duplicates
   cityArr = Array.from(new Set(cityArr));
+  if (cityArr.length > 5) cityArr.pop();
   localStorage.setItem("cities", JSON.stringify(cityArr));
-  closeAllLists();
+  // $(".autocomplete-items").empty();
   getWeather();
   loadCities();
 })
@@ -120,11 +114,10 @@ function getWeather() {
     url: geocodeURL,
     method: "GET"
   }).then(function (response) {
+    
     city = response.features[0].properties.label;
     var lat = (response.bbox[3] + response.bbox[1]) / 2;
     var lon = (response.bbox[2] + response.bbox[0]) / 2;
-    // console.log("lat:", lat);
-    // console.log("lon", lon);
 
     // Get weather from lat lon from openWeatherMap
     var weatherURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=hourly,minutely&units=imperial&appid=b8490967e1286ac31919deba8dced9fc"
@@ -139,17 +132,15 @@ function getWeather() {
 }
 
 function loadCurrentWeather(weather) {
-  // console.log(weather);
+  console.log(weather);
   var currentDate = new Date(weather.current.dt * 1000).toLocaleDateString()
-  // console.log(currentDate);
-
-  // console.log("Temp:", weather.current.temp);
-  // console.log("Humidity:", weather.current.humidity);
-
   var currentWeatherDiv = $("<div class='card-body'>");
   var cityDate = $("<h2>").text(`${city} (${currentDate})`);
   var iconCode = weather.current.weather[0].icon
+  var figure = $("<figure style='text-align: center;'>")
   var icon = $("<img>").attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png")
+  var caption = $("<figcaption>").text(weather.current.weather[0].main)
+  figure.append(icon, caption);
   var temp = $("<p>").text(`Temperature: ${weather.current.temp} °F`);
   var humidity = $("<p>").text(`Humidity: ${weather.current.humidity}%`);
   var windSpeed = $("<p>").text(`Wind Speed: ${weather.current.wind_speed} MPH`);
@@ -166,33 +157,35 @@ function loadCurrentWeather(weather) {
     var style = "background-color: rgb(141, 43, 222); color: white;";
   }
   var uvIndex = $("<p>").html(`UV Index: <span style="${style}" id="uv">${uv}<span>`);
-  currentWeatherDiv.append(cityDate, icon, temp, humidity, windSpeed, uvIndex);
+  currentWeatherDiv.append(cityDate, figure, temp, humidity, windSpeed, uvIndex);
   $("#currentWeather").empty()
   $("#currentWeather").append(currentWeatherDiv);
 }
 
 function loadForecasts(forecasts) {
-  var forecastHeader = $("<h2>").text("Forecast:")
-  var forecastBox = $("<div class='flex-box'>")
+  var forecastHeader = $("<h2>").text("Forecast:");
+  var forecastBox = $("<div class='flex-box'>");
   for (var i = 0; i < 5; i++) {
     var forecast = forecasts[i]
     var date = new Date(forecast.dt * 1000).toLocaleDateString();
-    var temp = forecast.temp.day
-    var humidity = forecast.humidity
+    var temp = forecast.temp.day;
+    var humidity = forecast.humidity;
 
     var forecastCard = $("<div class='card blue'>");
     var fCardBody = $("<div class='card-body pb-0'>");
     var fCardTitle = $("<h5 class='card-title'>");
     var iconCode = forecast.weather[0].icon
+    var figure = $("<figure style='text-align: center;'>")
     var icon = $("<img>").attr("src", "http://openweathermap.org/img/wn/" + iconCode + ".png")
-
+    var caption = $("<figcaption>").text(forecast.weather[0].main)
+    figure.append(icon, caption);
     var fCardTemp = $("<p>")
     var fCardHumidity = $("<p>")
     fCardTitle.text(date)
     fCardTemp.text(`Temp: ${temp} °F`)
     fCardHumidity.text(`Humidity: ${humidity}%`)
 
-    fCardBody.append(fCardTitle, icon, fCardTemp, fCardHumidity);
+    fCardBody.append(fCardTitle, figure, fCardTemp, fCardHumidity);
     forecastCard.append(fCardBody);
     forecastBox.append(forecastCard);
   }
@@ -200,25 +193,7 @@ function loadForecasts(forecasts) {
   $(".forecast").append(forecastHeader, forecastBox);
 }
 
-function closeAllLists() {
-  /*close all autocomplete lists in the document,
-  except the one passed as an argument:*/
-  var x = $(".autocomplete-items");
-  x.empty()
-  // for (var i = 0; i < x.length; i++) {
-  //   if (element != x[i] && element != $("#city-input")) {
-  //     x[i].parentNode.removeChild(x[i]);
-  //   }
-  // }
-}
-
-$(document).on("click", function (event) {
-  // console.log(event.target)
-  closeAllLists();
+$(document).on("click", function () {
+  $(".autocomplete-items").empty()
 });
-  // console.log(new Date(forecast.dt * 1000).toLocaleDateString());
-  // console.log("High:", forecast.temp.max);
-  // console.log("Low:", forecast.temp.min);
-
-  //TODO: Dynamically create card, load in date, icon, temp, humidity
 

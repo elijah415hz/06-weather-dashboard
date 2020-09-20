@@ -7,10 +7,15 @@
     border: none;
 }
 
+.cities {
+    max-width: 342px;
+}
+
 .blue {
-    margin: 10px;
+    margin: 5px;
     width: 155px;
-    background-color: rgb(89, 114, 255);
+    background-color: #007BFF;
+    color: white;
 }
 
 .flex-box {

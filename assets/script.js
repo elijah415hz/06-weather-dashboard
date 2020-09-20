@@ -17,10 +17,9 @@ function loadCities() {
   }
 }
 
-// Autocomplete API through GeocodeAPI
+// Keyboard controls for autocomplete list
 $("#city-input").on("keydown", function (event) {
-  console.log(event.code)
-  var input = $("#city-input").val();
+  var input = $("#city-input");
   var autoItems = document.querySelectorAll("#autocomplete-list div");
   switch (event.code) {
     case "ArrowDown":
@@ -36,37 +35,45 @@ $("#city-input").on("keydown", function (event) {
     case ("NumpadEnter"):
       if (currentFocus !== -1) {
         console.log(autoItems[currentFocus])
-        $("#city-input").val(autoItems[currentFocus].textContent);
+        input.val(autoItems[currentFocus].textContent);
       }
-      city = $("#city-input").val();
+      city = input.val();
       $("#cityBtn").trigger("click");
       currentFocus = -1;
       event.target.blur();
       break;
     default:
-      if (input.length > 1) {
-        queryURL = "https://app.geocodeapi.io/api/v1/autocomplete?apikey=0a157990-f940-11ea-ac04-cb65445966da&text=" + input + "&size=5&"
-        $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function (response) {
-          var autoCities = response.features;
-          var autoArr = [];
-          for (var i = 0; i < autoCities.length; i++) {
-            autoArr.push(autoCities[i].properties.label)
-          }
-          var a = $("#autocomplete-list");
-          a.empty();
-          for (var i = 0; i < autoArr.length; i++) {
-            var autoCompleteItem = $("<div>");
-            autoCompleteItem.text(autoArr[i]);
-            a.append(autoCompleteItem);
-          }
-        })
-      }
+      break;
   }
-
 })
+
+// Autocomplete using geocodeapi
+$("#city-input").on("input", function(){
+  var input = $("#city-input").val();
+  console.log(input)
+  if (input.length > 2) {
+      queryURL = "https://app.geocodeapi.io/api/v1/autocomplete?apikey=0a157990-f940-11ea-ac04-cb65445966da&text=" + input + "&size=5&"
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function (response) {
+        var autoCities = response.features;
+        var autoArr = [];
+        for (var i = 0; i < autoCities.length; i++) {
+          autoArr.push(autoCities[i].properties.label)
+        }
+        var autoList = $("#autocomplete-list");
+        autoList.empty();
+        for (var i = 0; i < autoArr.length; i++) {
+          var autoCompleteItem = $("<div>");
+          autoCompleteItem.text(autoArr[i]);
+          autoList.append(autoCompleteItem);
+        }
+      })
+    }
+})
+
+
 function addActive(element) {
   /*a function to classify an item as "active":*/
   if (!element) return false;

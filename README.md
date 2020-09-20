@@ -1,10 +1,14 @@
-# 06 Server-Side APIs: Weather Dashboard
+# Weather Dashboard
 
-Developers are often tasked with retrieving data from another application's API and using it in the context of their own. Third-party APIs allow developers to access their data and functionality by making requests with specific parameters to a URL. Your challenge is to build a weather dashboard that will run in the browser and feature dynamically updated HTML and CSS.
+![Dashboard Thumbnail](assets/weatherThumbnail.png)
 
-Use the [OpenWeather API](https://openweathermap.org/api) to retrieve weather data for cities. The documentation includes a section called "How to start" that will provide basic setup and usage instructions. Use `localStorage` to store any persistent data.
+Weather Dashboard is a custom weather dashboard that displays basic weather data for any location. Once the user enters an address or city, Weather Dashboard displays the current weather for that location, as well has a 5 day forecast. It displays the UV index highlighted in color to give quick at-a-glance information about UV intensity.
+Weather Dashboard relies on several server-side APIs for its functionality. The weather data that is presented to the user is gathered from OpenWeatherMap's OneCall API. Since the OneCall API requires the application to pass latitude and longitude coordinates to receive the weather data, GeoCodeAPI is used to return coordinates based on the user input. In addition, GeoCodeAPI's autofill API is used to supply autofill suggestions of locations as the user types. The autofill dropdown menu is built using only Vanilla JavaScript. 
+The user's past entries are stored persistantly and displayed underneath the input field. This data is used to display the user's most recently entered location, and weather data for past entries can be easily loaded by clicking on the entry.
 
-## User Story
+
+## Assignment from the client
+### User Story
 
 ```
 AS A traveler
@@ -12,7 +16,7 @@ I WANT to see the weather outlook for multiple cities
 SO THAT I can plan a trip accordingly
 ```
 
-## Acceptance Criteria
+### Acceptance Criteria
 
 ```
 GIVEN a weather dashboard with form inputs
@@ -29,18 +33,3 @@ THEN I am again presented with current and future conditions for that city
 WHEN I open the weather dashboard
 THEN I am presented with the last searched city forecast
 ```
-
-The following image demonstrates the application functionality:
-
-![weather dashboard demo](./Assets/06-server-side-apis-homework-demo.png)
-
-## Review
-
-You are required to submit the following for review:
-
-* The URL of the deployed application.
-
-* The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
-
-- - -
-© 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.

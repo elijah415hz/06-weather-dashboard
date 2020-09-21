@@ -1,6 +1,4 @@
-/* body {
-    height: 100%;
-} */
+
 .gray {
     background-color: #eee;
     padding-bottom: 15px;
@@ -8,6 +6,7 @@
 }
 
 .cities {
+    /* Limit width to width of input box + submit button */
     max-width: 342px;
 }
 
@@ -20,10 +19,11 @@
 
 .flex-box {
     display: flex;
-    /* justify-content: space-between; */
     flex-wrap: wrap;
 }
+
 .flex-box-no-wrap {
+    /* Don't allow botton to wrap below input box */
     display: flex;
 }
 
@@ -37,7 +37,6 @@
 }
 
 .autocomplete {
-    /*the container must be positioned relative:*/
     position: relative;
     display: inline-block;
 }
@@ -47,24 +46,26 @@
     border: 1px solid #d4d4d4;
     border-bottom: none;
     border-top: none;
+    /* Always on top */
     z-index: 99;
-    /*position the autocomplete items to be the same width as the container:*/
     top: 100%;
     left: 0;
     right: 0;
   }
+
   .autocomplete-items div {
     padding: 10px;
     cursor: pointer;
     background-color: #def;
     border-bottom: 1px solid #d4d4d4;
   }
+
   .autocomplete-items div:hover {
-    /*when hovering an item:*/
     background-color: #e9e9e9;
   }
+
   .autocomplete-active {
-    /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important;
+    /* Highlight selected autocomplete div when using keyboard controls */
+    background-color: #007BFF !important;
     color: #ffffff;
   }
